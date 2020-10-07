@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Test Your Javascript Skills</title>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+			integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+			crossorigin="anonymous"
+		/>
+
+		<script
+			src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+			integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+			integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+			crossorigin="anonymous"
+		></script>
+	</head>
+
+	<body>
+		<div id="wrapper">
+			<div class="jumbotron text-center">
+				<h1 class="display-4">Javascript Trivia for your own good</h1>
+				<a id="start" class="btn btn-primary btn-lg" href="#" role="button"
+					>Start!</a
+				>
+				<div class="countdown"></div>
+			</div>
+
+			<div id="subwrapper"></div>
+
+			<!-- <div class="card" style="width: 30em;margin:0 auto;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <p id=cardText class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <     
+                </div>
+        	</div> -->
+			<div class="container mt-5">
+				<div class="d-flex justify-content-center row">
+					<div class="col-md-10 col-lg-10">
+						<div class="border">
+							<div class="question bg-white p-3 border-bottom">
+								<div
+									class="d-flex flex-row justify-content-between align-items-center mcq"
+								>
+									<h4>MCQ Quiz</h4>
+									<span>(1 of 05)</span>
+								</div>
+								<div id="timer"></div>
+							</div>
+							<div class="question bg-white p-3 border-bottom">
+								<div class="d-flex flex-row align-items-center question-title">
+									<h3 class="text-danger">Q.</h3>
+									<h5 class="mt-1 ml-2" id="question">
+										This is where the question goes
+									</h5>
+								</div>
+								<div class="ans ml-2">
+									<label class="button">
+										<button id="A0" type="submit" value="Submit">
+											Answer 1 Goes Here
+										</button>
+									</label>
+								</div>
+								<div class="ans ml-2">
+									<label class="radio">
+										<button id="A1" type="submit" value="Submit">
+											Answer 2 Goes Here
+										</button>
+									</label>
+								</div>
+								<div class="ans ml-2">
+									<label class="radio">
+										<button id="A2" type="submit" value="Submit">
+											Answer 3 Goes Here
+										</button>
+									</label>
+								</div>
+								<div class="ans ml-2">
+									<label class="radio">
+										<button id="A3" type="submit" value="Submit">
+											Answer 4 Goes Here
+										</button>
+									</label>
+								</div>
+							</div>
+							<!-- <div
+								class="d-flex flex-row justify-content-between align-items-center p-3 bg-white"
+							>
+								<button
+									class="btn btn-primary d-flex align-items-center btn-danger"
+									type="button"
+								>
+									<i class="fa fa-angle-left mt-1 mr-1"></i
+									>&nbsp;previous</button
+								><button
+									class="btn btn-primary border-success align-items-center btn-success"
+									type="button"
+								>
+									Next<i class="fa fa-angle-right ml-2"></i>
+								</button>
+							</div> -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+			<script type="text/javascript" src="assets/javascript/script.js"></script>
+		</div>
+	</body>
+</html>
