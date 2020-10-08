@@ -41,13 +41,6 @@
 
 			<div id="subwrapper"></div>
 
-			<!-- <div class="card" style="width: 30em;margin:0 auto;">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                  <p id=cardText class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <     
-                </div>
-        	</div> -->
 			<div class="container mt-5">
 				<div class="d-flex justify-content-center row">
 					<div class="col-md-10 col-lg-10">
@@ -56,10 +49,14 @@
 								<div
 									class="d-flex flex-row justify-content-between align-items-center mcq"
 								>
-									<h4>MCQ Quiz</h4>
-									<span>(1 of 05)</span>
+									<h5 class="nav-item">
+										<a class="nav-link" href="./highscore.html"
+											>View Highscores</a
+										>
+									</h5>
+									<span id="questionStatus"></span>
 								</div>
-								<div id="timer"></div>
+								<div id="timer"><span>Time Remaining</span></div>
 							</div>
 							<div class="question bg-white p-3 border-bottom">
 								<div class="d-flex flex-row align-items-center question-title">
@@ -97,26 +94,11 @@
 									</label>
 								</div>
 							</div>
-							<!-- <div
-								class="d-flex flex-row justify-content-between align-items-center p-3 bg-white"
-							>
-								<button
-									class="btn btn-primary d-flex align-items-center btn-danger"
-									type="button"
-								>
-									<i class="fa fa-angle-left mt-1 mr-1"></i
-									>&nbsp;previous</button
-								><button
-									class="btn btn-primary border-success align-items-center btn-success"
-									type="button"
-								>
-									Next<i class="fa fa-angle-right ml-2"></i>
-								</button>
-							</div> -->
 						</div>
 					</div>
 				</div>
 			</div>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 			<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 			<script type="text/javascript" src="assets/javascript/script.js"></script>
 		</div>
