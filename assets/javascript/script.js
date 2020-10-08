@@ -1,42 +1,36 @@
 // Global variable definition
-var curQuestion = 0;
+
+// for the timer
+var curSeconds = 0;
+var curMinutes = 0;
 var timeoutHandle;
+var tmpSeconds = 0;
+
+// For processing questions and answers
+var curQuestion = 0;
 var answerId = "";
 var userAnswer = 0;
+var questionCount = "";
+var wrongAnswer = "";
 
 // For keeping score
 var totCorrect = 0;
 var totWrong = 0;
 var totQuestions = 5;
 var totScore = "";
-var questionCount = "";
 
-function countdown(minutes, seconds) {
-	var seconds = 60;
-	var mins = minutes;
+// For storing high scores
+var userInitials = "";
+var userScores = [];
 
-	function tick() {
-		var counter = document.getElementById("timer");
-		var current_minutes = mins - 1;
-		seconds--;
-		counter.innerHTML =
-			current_minutes.toString() +
-			":" +
-			(seconds < 10 ? "0" : "") +
-			String(seconds);
-		if (seconds > 0) {
-			timeoutHandle = setTimeout(tick, 1000);
-		} else {
-			if (mins > 1) {
-				setTimeout(function () {
-					countdown(mins - 1);
-				}, 1000);
-			}
-		}
-	}
-	tick();
-}
-
+var scoresObject = {
+	userInitials: userInitials,
+	Correct: totCorrect,
+	Incorrect: totWrong,
+	Minutes: curMinutes,
+	Seconds: curSeconds,
+	Timehandle: timeoutHandle,
+};
 // Suppress the seed html before the first question
 $("#question").empty();
 $(".text-danger").empty();
@@ -46,11 +40,39 @@ $("#A0").empty();
 $("#A1").empty();
 $("#A2").empty();
 $("#A3").empty();
-$("#A4").empty();
+
+// retrieve local storage
+init();
+
+function countdown(minutes, seconds) {
+	function tick() {
+		var counter = document.getElementById("timer");
+		counter.innerHTML =
+			minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
+		seconds--;
+		if (seconds >= 0) {
+			timeoutHandle = setTimeout(tick, 1000);
+		} else {
+			if (minutes >= 1) {
+				// countdown(mins-1);   never reach “00″ issue solved:Contributed by Victor Streithorst
+				setTimeout(function () {
+					countdown(minutes - 1, 59);
+				}, 1000);
+			}
+		}
+
+		curSeconds = seconds;
+		curMinutes = minutes;
+		// console.log(curMinutes + "Secfromcountdown function" + curSeconds);
+	}
+	tick();
+}
 
 // Start the timer and remove the start button when Start is pressed
 $("#start").on("click", function () {
-	countdown(5);
+	countdown(2, 30);
+	console.log("Started the initial time");
+
 	// remove the start button when clicked
 	$("#start").remove();
 
@@ -59,8 +81,9 @@ $("#start").on("click", function () {
 
 	questionCount =
 		"Question (" + (curQuestion + 1) + " of " + totQuestions + ")";
-	console.log("Question (" + (curQuestion + 1) + " of " + totQuestions + ")");
+
 	console.log(questionCount);
+
 	console.log(questions[curQuestion].question);
 	$("#questionStatus").html(questionCount);
 
@@ -78,7 +101,7 @@ function loadAnswers() {
 		const element = questions[curQuestion].answers[j];
 
 		answerId = "#A" + j;
-		console.log(questions[curQuestion].answers[j]);
+
 		$(answerId).html(questions[curQuestion].answers[j]);
 	}
 }
@@ -118,20 +141,24 @@ $("#A3").on("click", function () {
 function checkAnswer() {
 	console.log(questions[curQuestion].answers[userAnswer]);
 	console.log(questions[curQuestion].correctAnswer);
+
+	// Process incorrect and correct answers
+	wrongAnswer = "";
+
 	if (
 		questions[curQuestion].answers[userAnswer] ==
 		questions[curQuestion].correctAnswer
 	) {
 		console.log("The answer is correct for question " + curQuestion);
 		console.log(
-			"The value of the answer is  " + questions[curQuestion].correctAnswer
+			"The correctly matched value of the answer is  " +
+				questions[curQuestion].correctAnswer
 		);
 
 		//Add to total correct
 		totCorrect++;
 
 		// Update the scoreboard on the screen
-
 		curQuestion = curQuestion + 1;
 
 		if (curQuestion < 5) {
@@ -144,6 +171,9 @@ function checkAnswer() {
 			console.log(questions[curQuestion].question);
 			$("#questionStatus").html(questionCount);
 			displayQuestions();
+		} else {
+			// last question answered
+			lastQuestion();
 		}
 	} else {
 		console.log("The answer is wrong for question " + curQuestion);
@@ -154,14 +184,83 @@ function checkAnswer() {
 		console.log(
 			"The correct answer is  " + questions[curQuestion].correctAnswer
 		);
+
 		//Add to total incorrect
 		totWrong++;
 
+		// Update the scoreboard on the screen
 		curQuestion = curQuestion + 1;
+		console.log(curQuestion);
+
+		// Need to subtract 30 seconds from the time
+
+		if (curSeconds < 30) {
+			tmpSeconds = curMinutes * 60 + (curSeconds - 30);
+			console.log("Total TEMP Seconds " + tmpSeconds);
+			curMinutes = math.round(tmpSeconds / 60);
+			curSeconds = tmpSeconds % 60;
+			console.log(curMinutes + " Seconds" + curSeconds);
+		}
+		console.log("Current minutes " + curMinutes);
+		console.log("Current seconds " + curSeconds);
+
+		countdown(curMinutes, curSeconds);
+
+		console.log("Sent time to countdown function ");
+
 		if (curQuestion < 5) {
+			questionCount =
+				"Question (" + (curQuestion + 1) + " of " + totQuestions + ")";
+			console.log(
+				"Question (" + (curQuestion + 1) + " of " + totQuestions + ")"
+			);
+			console.log(questionCount);
+			console.log(questions[curQuestion].question);
+
+			$("#questionStatus").html(questionCount);
 			displayQuestions();
+		} else {
+			// last question answered
+			lastQuestion();
 		}
 	}
+}
+
+function lastQuestion() {
+	userInitials = prompt("Game Over! Enter your initials to save this score");
+	storeScores();
+}
+
+// Retreive previous/existing high scores from local storage
+
+function init() {
+	// Get stored scores from localStorage
+	// Parsing the JSON string to an object
+
+	var storedScores = JSON.parse(localStorage.getItem("userScores"));
+
+	// If Scores were retrieved from localStorage, update the Scores array to it
+	if (storedScores !== null) {
+		userScores = storedScores;
+	}
+	console.log("userScores: ", userScores);
+
+	// Render Scores to the DOM
+	// renderScores();
+}
+
+function storeScores() {
+	// Stringify and set "Scores" key in localStorage to Scores array
+	scoresObject.userInitials = userInitials;
+	scoresObject.Time = timeoutHandle;
+	scoresObject.Correct = totCorrect;
+	userScores.push(scoresObject);
+
+	localStorage.setItem("userScores", JSON.stringify(userScores));
+
+	console.log("TimeoutHandle " + timeoutHandle);
+	console.log("Minutes " + curMinutes);
+	console.log("Seconds " + curSeconds);
 }
 
 // Variable for questions, an array of objects
