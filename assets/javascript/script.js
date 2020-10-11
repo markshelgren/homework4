@@ -1,5 +1,8 @@
 // Global variable definition
 
+// For the status of the start button 
+
+
 // for the timer
 var curSeconds = 0;
 var curMinutes = 0;
@@ -19,6 +22,7 @@ var totWrong = 0;
 var totQuestions = 5;
 var totScore = ""; 
 var lastAnswer = "";
+
 
 // For storing high scores
 var userInitials = "";
@@ -80,7 +84,7 @@ $("#start").on("click", function () {
 	console.log("Started the initial time");
 
 	// remove the start button when clicked
-	$("#start").detach();
+	$("#start").hide();
 	// $("#start").remove();
 
 	// Display the first question
@@ -278,6 +282,7 @@ function storeScores() {
 
 	localStorage.setItem("userScores", JSON.stringify(userScores)); 
 
+	$("#subwrapper").empty();
 	$("#question").empty();
 	$(".text-danger").empty();
 	$("button").empty();
@@ -285,11 +290,12 @@ function storeScores() {
 	$("#A0").empty();
 	$("#A1").empty();
 	$("#A2").empty();
-	$("#A3").empty();   
+	$("#A3").empty(); 
 
-	// $("#start").remove();
-	$("#start").detach();
-}
+	$("#start").show(); 
+	lastAnswer = "";
+	$("#lastAnswer").html(lastAnswer);
+};		
 
 // Variable for questions, an array of objects
 
