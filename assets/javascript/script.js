@@ -17,7 +17,8 @@ var wrongAnswer = "";
 var totCorrect = 0;
 var totWrong = 0;
 var totQuestions = 5;
-var totScore = "";
+var totScore = ""; 
+var lastAnswer = "";
 
 // For storing high scores
 var userInitials = "";
@@ -31,7 +32,10 @@ var scoresObject = {
 	Seconds: curSeconds,
 	Timehandle: timeoutHandle,
 };
+
+
 // Suppress the seed html before the first question
+
 $("#question").empty();
 $(".text-danger").empty();
 $("button").empty();
@@ -39,7 +43,8 @@ $(".question bg-white p-3 border-bottom").empty();
 $("#A0").empty();
 $("#A1").empty();
 $("#A2").empty();
-$("#A3").empty();
+$("#A3").empty();  
+
 
 // retrieve local storage
 init();
@@ -47,19 +52,20 @@ init();
 function countdown(minutes, seconds) {
 	function tick() {
 		var counter = document.getElementById("timer");
+
 		counter.innerHTML =
 			minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
 		seconds--;
 		if (seconds >= 0) {
 			timeoutHandle = setTimeout(tick, 1000);
-		} else {
-			if (minutes >= 1) {
+		}
+		 else { 
 				// countdown(mins-1);   never reach “00″ issue solved:Contributed by Victor Streithorst
 				setTimeout(function () {
 					countdown(minutes - 1, 59);
 				}, 1000);
 			}
-		}
+		
 
 		curSeconds = seconds;
 		curMinutes = minutes;
@@ -70,11 +76,12 @@ function countdown(minutes, seconds) {
 
 // Start the timer and remove the start button when Start is pressed
 $("#start").on("click", function () {
-	countdown(2, 30);
+	// countdown(2, 30); 
 	console.log("Started the initial time");
 
 	// remove the start button when clicked
-	$("#start").remove();
+	$("#start").detach();
+	// $("#start").remove();
 
 	// Display the first question
 	curQuestion = 0;
@@ -160,6 +167,10 @@ function checkAnswer() {
 
 		// Update the scoreboard on the screen
 		curQuestion = curQuestion + 1;
+		lastAnswer = "The last answer was CORRECT";
+		$("#lastAnswer").html(lastAnswer);
+		$("#lastAnswer").css('color', 'green');
+
 
 		if (curQuestion < 5) {
 			questionCount =
@@ -191,20 +202,23 @@ function checkAnswer() {
 		// Update the scoreboard on the screen
 		curQuestion = curQuestion + 1;
 		console.log(curQuestion);
+		lastAnswer = "The last answer was PATHETIC";
+		$("#lastAnswer").html(lastAnswer);
+		$("#lastAnswer").css('color', 'red');
 
 		// Need to subtract 30 seconds from the time
 
 		if (curSeconds < 30) {
 			tmpSeconds = curMinutes * 60 + (curSeconds - 30);
 			console.log("Total TEMP Seconds " + tmpSeconds);
-			curMinutes = math.round(tmpSeconds / 60);
+			curMinutes = Math.round(tmpSeconds / 60);
 			curSeconds = tmpSeconds % 60;
 			console.log(curMinutes + " Seconds" + curSeconds);
 		}
 		console.log("Current minutes " + curMinutes);
 		console.log("Current seconds " + curSeconds);
 
-		countdown(curMinutes, curSeconds);
+		// countdown(curMinutes, curSeconds);
 
 		console.log("Sent time to countdown function ");
 
@@ -245,22 +259,36 @@ function init() {
 	}
 	console.log("userScores: ", userScores);
 
-	// Render Scores to the DOM
-	// renderScores();
 }
 
 function storeScores() {
-	// Stringify and set "Scores" key in localStorage to Scores array
+	// Stringify and set "Scores" key in localStorage to Scores array  
+
+	console.log("Minutes " + curMinutes);
+	console.log("Seconds " + curSeconds); 
+
 	scoresObject.userInitials = userInitials;
-	scoresObject.Time = timeoutHandle;
+	scoresObject.Timehandle = timeoutHandle;
 	scoresObject.Correct = totCorrect;
+	scoresObject.Incorrect = totWrong;	
+	scoresObject.Minutes = curMinutes;
+	scoresObject.Seconds = curSeconds;
+
 	userScores.push(scoresObject);
 
-	localStorage.setItem("userScores", JSON.stringify(userScores));
+	localStorage.setItem("userScores", JSON.stringify(userScores)); 
 
-	console.log("TimeoutHandle " + timeoutHandle);
-	console.log("Minutes " + curMinutes);
-	console.log("Seconds " + curSeconds);
+	$("#question").empty();
+	$(".text-danger").empty();
+	$("button").empty();
+	$(".question bg-white p-3 border-bottom").empty();
+	$("#A0").empty();
+	$("#A1").empty();
+	$("#A2").empty();
+	$("#A3").empty();   
+
+	// $("#start").remove();
+	$("#start").detach();
 }
 
 // Variable for questions, an array of objects
@@ -279,7 +307,7 @@ var questions = [
 	{
 		question: "Which operator is used to assign a value to a variable?",
 		answers: ["=", "X", "*", "-"],
-		correctAnswer: "-",
+		correctAnswer: "=",
 	},
 	{
 		question: "How to write an IF statement in JavaScript?",
