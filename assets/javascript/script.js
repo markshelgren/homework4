@@ -48,47 +48,51 @@ $("#A1").empty();
 $("#A2").empty();
 $("#A3").empty();  
 
-    var timeoutHandle;
 
-	function countdown(minutes, seconds) {
-		function tick() {
-			var counter = document.getElementById("timer");
-	
-			counter.innerHTML =
-				minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
-			seconds--;
-			if (seconds >= 0) {
-				timeoutHandle = setTimeout(tick, 1000);
-			}
-			 else { 
-					// countdown(mins-1);   never reach “00″ issue solved:Contributed by Victor Streithorst
-					setTimeout(function () {
-						countdown(minutes - 1, 59);
-					}, 1000);
-				}
-			
-	
-			curSeconds = seconds;
-			curMinutes = minutes;
-			// console.log(curMinutes + "Secfromcountdown function" + curSeconds);
-			
-		if (curMinutes === 0 && curSeconds <= 0) {
-			alert("TIME IS UP!  YOU LOSE!!! Press either button to continue")
-			init();
-			document.location.reload(true)
+function countdown(minutes, seconds) {
+	function tick() {
+		var counter = document.getElementById("timer");
+
+		if (curMinutes > 0 || curSeconds > 0) {
+			minutes = curMinutes;
+			seconds = curSeconds;
 		} 
+
+
+		counter.innerHTML =
+			minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
+		seconds--;
+		if (seconds >= 0) {
+			timeoutHandle = setTimeout(tick, 1000);
 		}
-		tick();  
+		 else { 
+				// countdown(mins-1);   never reach “00″ issue solved:Contributed by Victor Streithorst
+				setTimeout(function () {
+					countdown(minutes - 1, 59);
+				}, 1000);
+			}
+		
 
+		curSeconds = seconds;
+		curMinutes = minutes;
+		// console.log(curMinutes + "Secfromcountdown function" + curSeconds);
+		
+	if (curMinutes === 0 && curSeconds <= 0) {
+		alert("TIME IS UP!  YOU LOSE!!! Press OK to continue")
+		init();
+		document.location.reload(true)
+	} 
 	}
+	tick();  
 
+}
 
 // retrieve local storage
 init();
 
 // Start the timer and remove the start button when Start is pressed
 $("#start").on("click", function () {
-	countdown(2, 30); 
+	countdown(1, 15); 
 	console.log("Started the initial time");
 
 	// remove the start button when clicked
@@ -318,6 +322,7 @@ function storeScores() {
 	$("#start").show(); 
 	lastAnswer = "";
 	$("#lastAnswer").html(lastAnswer); 
+	init();
 	document.location.reload(true)
 };		
 
