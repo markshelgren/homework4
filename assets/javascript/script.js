@@ -1,8 +1,5 @@
 // Global variable definition
 
-// For the status of the start button 
-
-
 // for the timer
 var curSeconds = 0;
 var curMinutes = 0;
@@ -23,6 +20,7 @@ var totQuestions = 5;
 var totScore = ""; 
 var lastAnswer = "";
 
+var counter = 150;
 
 // For storing high scores
 var userInitials = "";
@@ -38,6 +36,7 @@ var scoresObject = {
 };
 
 
+$(document).ready(function() {
 // Suppress the seed html before the first question
 
 $("#question").empty();
@@ -49,38 +48,47 @@ $("#A1").empty();
 $("#A2").empty();
 $("#A3").empty();  
 
+    var timeoutHandle;
+
+	function countdown(minutes, seconds) {
+		function tick() {
+			var counter = document.getElementById("timer");
+	
+			counter.innerHTML =
+				minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
+			seconds--;
+			if (seconds >= 0) {
+				timeoutHandle = setTimeout(tick, 1000);
+			}
+			 else { 
+					// countdown(mins-1);   never reach “00″ issue solved:Contributed by Victor Streithorst
+					setTimeout(function () {
+						countdown(minutes - 1, 59);
+					}, 1000);
+				}
+			
+	
+			curSeconds = seconds;
+			curMinutes = minutes;
+			// console.log(curMinutes + "Secfromcountdown function" + curSeconds);
+			
+		if (curMinutes === 0 && curSeconds <= 0) {
+			alert("TIME IS UP!  YOU LOSE!!! Press either button to continue")
+			init();
+			document.location.reload(true)
+		} 
+		}
+		tick();  
+
+	}
+
 
 // retrieve local storage
 init();
 
-function countdown(minutes, seconds) {
-	function tick() {
-		var counter = document.getElementById("timer");
-
-		counter.innerHTML =
-			minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
-		seconds--;
-		if (seconds >= 0) {
-			timeoutHandle = setTimeout(tick, 1000);
-		}
-		 else { 
-				// countdown(mins-1);   never reach “00″ issue solved:Contributed by Victor Streithorst
-				setTimeout(function () {
-					countdown(minutes - 1, 59);
-				}, 1000);
-			}
-		
-
-		curSeconds = seconds;
-		curMinutes = minutes;
-		// console.log(curMinutes + "Secfromcountdown function" + curSeconds);
-	}
-	tick();
-}
-
 // Start the timer and remove the start button when Start is pressed
 $("#start").on("click", function () {
-	// countdown(2, 30); 
+	countdown(2, 30); 
 	console.log("Started the initial time");
 
 	// remove the start button when clicked
@@ -210,19 +218,30 @@ function checkAnswer() {
 		$("#lastAnswer").html(lastAnswer);
 		$("#lastAnswer").css('color', 'red');
 
-		// Need to subtract 30 seconds from the time
+		// Need to subtract 30 seconds from the time 
+		 console.log(curMinutes + "before calc" + curSeconds);
 
-		if (curSeconds < 30) {
-			tmpSeconds = curMinutes * 60 + (curSeconds - 30);
-			console.log("Total TEMP Seconds " + tmpSeconds);
-			curMinutes = Math.round(tmpSeconds / 60);
+			tmpSeconds = (curMinutes * 60 ) + curSeconds;
+			console.log("Total TEMP Seconds " + tmpSeconds); 
+
+			tmpSeconds = tmpSeconds - 30;
+			console.log("Total seconds after subtraction " + tmpSeconds);
+
+			curMinutes = Math.floor(tmpSeconds / 60);
+			console.log("Total Cur Minutes after rounding " + curMinutes);
+			
 			curSeconds = tmpSeconds % 60;
 			console.log(curMinutes + " Seconds" + curSeconds);
-		}
-		console.log("Current minutes " + curMinutes);
-		console.log("Current seconds " + curSeconds);
 
-		// countdown(curMinutes, curSeconds);
+		console.log("Current minutes " + curMinutes);
+		console.log("Current seconds " + curSeconds);  
+
+		if (curMinutes === 0 && curSeconds <= 0) {
+			alert("TIME IS UP! YOU LOSE! Press a button continue")
+			return;
+		}
+
+		countdown(curMinutes, curSeconds);
 
 		console.log("Sent time to countdown function ");
 
@@ -263,6 +282,10 @@ function init() {
 	}
 	console.log("userScores: ", userScores);
 
+	$("#start").show(); 
+	lastAnswer = "";
+	$("#lastAnswer").html(lastAnswer);
+
 }
 
 function storeScores() {
@@ -294,7 +317,8 @@ function storeScores() {
 
 	$("#start").show(); 
 	lastAnswer = "";
-	$("#lastAnswer").html(lastAnswer);
+	$("#lastAnswer").html(lastAnswer); 
+	document.location.reload(true)
 };		
 
 // Variable for questions, an array of objects
@@ -331,3 +355,8 @@ var questions = [
 		correctAnswer: "for (i = 0; i <= 5; i++)",
 	},
 ];
+
+      // Call initializeCalculater so we can set the state of our app
+	  init(); 
+
+    });
